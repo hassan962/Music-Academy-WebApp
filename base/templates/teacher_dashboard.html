@@ -1,0 +1,18 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="d-flex">
+  <div class="bg-dark text-white p-3" style="width: 220px;">
+    <h5>Teacher Menu</h5>
+    <ul class="nav flex-column">
+      <li class="nav-item"><a href="{% url 'create_course' %}" class="nav-link text-white">Create Course</a></li>
+      <li class="nav-item"><a href="{% url 'course_list' %}" class="nav-link text-white">Course List</a></li>
+      <li class="nav-item"><a href="{% url 'upcoming_classes' %}" class="nav-link text-white">Upcoming Classes</a></li>
+      <li class="nav-item"><a href="{% url 'upload_lesson' %}" class="nav-link text-white">Upload Lesson</a></li>
+      <li class="nav-item"><a href="{% url 'schedule_class' %}" class="nav-link text-white">Schedule Class</a></li>
+    </ul>
+  </div>
+  <div class="flex-grow-1 p-4">
+    <h3>Welcome, {{ user.first_name }}</h3>
+  </div>
+</div>
+{% endblock %}

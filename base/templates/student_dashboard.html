@@ -1,0 +1,22 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container mt-4">
+  <div class="flex-grow-1 p-4">
+    <h3>Welcome, {{ user.first_name }}</h3>
+  </div>
+  <h2 class="mb-4">Your Enrolled Courses</h2>
+  <div class="row">
+    {% for enrollment in enrollments %}
+      <div class="col-md-6 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">{{ enrollment.course.title }}</h5>
+            <p class="card-text">{{ enrollment.course.description }}</p>
+            <a href="{% url 'student_course_detail' enrollment.course.id %}" class="btn btn-info">View Course</a>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">Music Academy</a>
+    <button id="themeToggle" class="btn btn-sm btn-secondary ms-2">🌗 Theme</button>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if user.is_authenticated %}
+          {% if user.role == 'student' %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_dashboard' %}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_course_list' %}">Courses</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'student_upcoming_classes' %}">Live Classes</a></li>
+          {% elif user.role == 'teacher' %}
+            <li class="nav-item"><a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'create_course' %}">Create Course</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'upload_lesson' %}">Upload Lesson</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'schedule_class' %}">Schedule Class</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>

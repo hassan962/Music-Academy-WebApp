@@ -1,0 +1,31 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="h4 fw-bold mb-3">{{ course.title }}</h2>
+  <p>{{ course.description }}</p>
+
+  <h3 class="h5 mt-4 mb-3">Lessons</h3>
+  <ul class="list-group">
+    {% for lesson in lessons %}
+      <li class="list-group-item d-flex justify-content-between align-items-start mb-2 shadow-sm">
+        <div class="me-3">
+          <strong>{{ lesson.title }}</strong>
+          {% if lesson.id in completed_lessons %}
+            <span class="badge bg-success ms-2">Completed</span>
+          {% endif %}
+        </div>
+        <div class="text-end">
+          <video width="300" controls class="mb-2 rounded border">
+            <source src="{{ lesson.video.url }}" type="video/mp4">
+            Your browser does not support the video tag.
+          </video><br>
+          {% if lesson.material %}
+          <a href="{{ lesson.material.url }}" download class="btn btn-sm btn-outline-secondary mb-2">Download Material</a>
+        {% endif %}
+          <a href="{% url 'mark_lesson_complete' lesson.id %}" class="btn btn-sm btn-outline-primary mt-1">Mark Complete</a>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

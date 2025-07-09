@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4">Upcoming Live Classes</h2>
+  <div class="list-group">
+    {% for c in classes %}
+      <div class="list-group-item">
+        <h5>{{ c.title }} - {{ c.course.title }} </h5>
+        <p><strong>Date:</strong> {{ c.scheduled_datetime }}</p>
+        <a href="{{ c.meeting_link }}" target="_blank" class="btn btn-outline-success">Join Class</a>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
