@@ -15,10 +15,12 @@
           {% endif %}
         </div>
         <div class="text-end">
+          {% if lesson.video %}
           <video width="300" controls class="mb-2 rounded border">
             <source src="{{ lesson.video.url }}" type="video/mp4">
             Your browser does not support the video tag.
           </video><br>
+          {% endif %}
           {% if lesson.material %}
           <a href="{{ lesson.material.url }}" download class="btn btn-sm btn-outline-secondary mb-2">Download Material</a>
         {% endif %}

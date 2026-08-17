@@ -33,6 +33,8 @@ def login_view(request):
                 return redirect('student_dashboard')
             elif request.user.role == 'teacher':
                 return redirect('dashboard')
+        else:
+            messages.error(request, "Invalid username or password.")
     return render(request, 'login.html')
 
 @login_required
@@ -75,6 +77,7 @@ def upload_lesson(request):
     form.fields['course'].queryset = Course.objects.filter(teacher=request.user)
     if request.method == 'POST':
         form = LessonForm(request.POST, request.FILES)
+        form.fields['course'].queryset = Course.objects.filter(teacher=request.user)
         if form.is_valid():
             form.save()
             return redirect('dashboard')
@@ -86,7 +89,6 @@ def course_list(request):
     return render(request, 'course_list.html', {'courses': courses})
 
 @login_required
-@user_passes_test(is_teacher)
 def course_detail(request, slug):
     course = Course.objects.get(slug=slug)
     lessons = course.lessons.all()

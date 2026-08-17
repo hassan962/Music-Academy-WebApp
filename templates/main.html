@@ -52,7 +52,6 @@
     {% include 'nav.html' %}
     <center>
        <div class="container mt-4">
-        {% block content %}
         {% if messages %}
   <div class="container mt-3">
     {% for message in messages %}
@@ -63,9 +62,8 @@
     {% endfor %}
   </div>
 {% endif %}
-
-
-{% endblock %}
+        {% block content %}
+        {% endblock %}
     </div>
 
     <!-- Bootstrap JS (optional) -->

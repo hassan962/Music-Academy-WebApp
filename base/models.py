@@ -50,7 +50,9 @@ class LiveClass(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'teacher'})
 
     def __str__(self):
-        return f"{self.title} on {self.scheduled_datetime.strftime('%Y-%m-%d %H:%M')}"
+        if self.scheduled_datetime:
+            return f"{self.title} on {self.scheduled_datetime.strftime('%Y-%m-%d %H:%M')}"
+        return self.title
 
 class Progress(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE, limit_choices_to={'role': 'student'})

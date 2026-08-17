@@ -10,11 +10,11 @@ class CustomUserCreationForm(UserCreationForm):
         model = User
         fields = [ 'first_name', 'last_name','username', 'email', 'password1', 'password2', 'role']
 
-        def __init__(self, *args, **kwargs):
-            super().__init__(*args, **kwargs)
-            self.fields['username'].help_text = None
-            self.fields['password1'].help_text = None
-            self.fields['password2'].help_text = None
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['username'].help_text = None
+        self.fields['password1'].help_text = None
+        self.fields['password2'].help_text = None
 
 class CourseForm(forms.ModelForm):
     class Meta:
