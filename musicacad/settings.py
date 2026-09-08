@@ -66,12 +66,15 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
-    'cloudinary_storage',
     'django.contrib.staticfiles',
-    'cloudinary',
     'base',
     'widget_tweaks',
 ]
+# Deliberately NOT registered as INSTALLED_APPS: cloudinary_storage ships its
+# own collectstatic override that no-ops copying static files unless you're
+# also using Cloudinary for static (STATICFILES_STORAGE == StaticCloudinaryStorage),
+# which silently breaks WhiteNoise's static handling. We only need the storage
+# class below for MEDIA files, which doesn't require app registration.
 MESSAGE_STORAGE = 'django.contrib.messages.storage.session.SessionStorage'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
