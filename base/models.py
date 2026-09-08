@@ -1,8 +1,22 @@
+from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.utils.text import slugify
 from django.db import models
 from django.utils import timezone
 # Create your models here.
+
+# MediaCloudinaryStorage (Cloudinary's own default) assumes every upload is
+# an image and rejects anything else with "Invalid image file" - lesson
+# videos and PDFs need the resource-type-specific storage classes instead.
+# storage=None (the local-dev/no-Cloudinary case) just means "use the
+# project's default storage", identical to omitting the kwarg entirely.
+if settings.USE_CLOUDINARY:
+    from cloudinary_storage.storage import RawMediaCloudinaryStorage, VideoMediaCloudinaryStorage
+    LESSON_VIDEO_STORAGE = VideoMediaCloudinaryStorage()
+    LESSON_MATERIAL_STORAGE = RawMediaCloudinaryStorage()
+else:
+    LESSON_VIDEO_STORAGE = None
+    LESSON_MATERIAL_STORAGE = None
 
 
 class User(AbstractUser):
@@ -34,8 +48,8 @@ class Course(models.Model):
 class Lesson(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=200)
-    video = models.FileField(upload_to='lesson_videos/', null=True, blank=True)
-    material = models.FileField(upload_to='lesson_materials/', null=True, blank=True)
+    video = models.FileField(upload_to='lesson_videos/', null=True, blank=True, storage=LESSON_VIDEO_STORAGE)
+    material = models.FileField(upload_to='lesson_materials/', null=True, blank=True, storage=LESSON_MATERIAL_STORAGE)
     created = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
