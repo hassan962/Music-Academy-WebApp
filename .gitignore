@@ -16,6 +16,9 @@ db.sqlite3-journal
 # Environment variables
 .env
 
+# Collected static files (generated at deploy time)
+staticfiles/
+
 # OS
 .DS_Store
 Thumbs.db
