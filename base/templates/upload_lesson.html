@@ -1,11 +1,31 @@
 {% extends 'main.html' %}
+{% load widget_tweaks %}
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-4">Upload Lesson</h2>
-  <form method="POST" enctype="multipart/form-data" class="card p-4 shadow-sm">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Upload</button>
-  </form>
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <h1 class="mb-4">Upload Lesson</h1>
+    <div class="card p-4">
+      <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Course</label>
+          {{ form.course|add_class:"form-select" }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          {{ form.title|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Video</label>
+          {{ form.video|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Material</label>
+          {{ form.material|add_class:"form-control" }}
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-2">Upload</button>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}

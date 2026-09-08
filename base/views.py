@@ -6,6 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.decorators import user_passes_test
 from django.utils import timezone
 from django.contrib import messages
+from django.db.models import Count
 # Create your views here.
 def home(request):
     return render(request,'home.html')
@@ -45,9 +46,20 @@ def logout_view(request):
 @login_required
 def dashboard(request):
     if request.user.role == 'student':
-        return render(request, 'student_dashboard.html')
+        return redirect('student_dashboard')
     elif request.user.role == 'teacher':
-        return render(request, 'teacher_dashboard.html')
+        courses = Course.objects.filter(teacher=request.user).annotate(
+            lesson_count=Count('lessons', distinct=True),
+            student_count=Count('enrollments', distinct=True),
+        )
+        next_class = LiveClass.objects.filter(
+            created_by=request.user, scheduled_datetime__gte=timezone.now()
+        ).order_by('scheduled_datetime').first()
+        return render(request, 'teacher_dashboard.html', {
+            'courses': courses,
+            'total_students': sum(course.student_count for course in courses),
+            'next_class': next_class,
+        })
     else:
         return render(request, 'home.html')
 
@@ -145,8 +157,22 @@ def enroll_in_course(request, course_id):
 @login_required
 @user_passes_test(is_student)
 def student_dashboard(request):
-    enrollments = Enrollment.objects.filter(student=request.user)
-    return render(request, 'student_dashboard.html', {'enrollments': enrollments})
+    enrollments = Enrollment.objects.filter(student=request.user).select_related('course', 'course__teacher')
+    for enrollment in enrollments:
+        lessons = enrollment.course.lessons.all()
+        total = lessons.count()
+        completed = LessonProgress.objects.filter(student=request.user, lesson__in=lessons, completed=True).count()
+        enrollment.total_lessons = total
+        enrollment.completed_lessons = completed
+        enrollment.progress_percent = int((completed / total) * 100) if total else 0
+    next_class = LiveClass.objects.filter(
+        course__enrollments__student=request.user,
+        scheduled_datetime__gte=timezone.now()
+    ).order_by('scheduled_datetime').distinct().first()
+    return render(request, 'student_dashboard.html', {
+        'enrollments': enrollments,
+        'next_class': next_class,
+    })
 
 @login_required
 @user_passes_test(is_student)

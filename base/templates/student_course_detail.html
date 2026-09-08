@@ -1,33 +1,35 @@
 {% extends 'main.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h2 class="h4 fw-bold mb-3">{{ course.title }}</h2>
-  <p>{{ course.description }}</p>
+<h1 class="mb-2">{{ course.title }}</h1>
+<p class="text-muted mb-4">{{ course.description }}</p>
 
-  <h3 class="h5 mt-4 mb-3">Lessons</h3>
-  <ul class="list-group">
-    {% for lesson in lessons %}
-      <li class="list-group-item d-flex justify-content-between align-items-start mb-2 shadow-sm">
-        <div class="me-3">
-          <strong>{{ lesson.title }}</strong>
-          {% if lesson.id in completed_lessons %}
-            <span class="badge bg-success ms-2">Completed</span>
-          {% endif %}
-        </div>
-        <div class="text-end">
-          {% if lesson.video %}
-          <video width="300" controls class="mb-2 rounded border">
-            <source src="{{ lesson.video.url }}" type="video/mp4">
-            Your browser does not support the video tag.
-          </video><br>
-          {% endif %}
-          {% if lesson.material %}
-          <a href="{{ lesson.material.url }}" download class="btn btn-sm btn-outline-secondary mb-2">Download Material</a>
+<h2 class="h5 mb-3">Lessons</h2>
+<div class="d-flex flex-column gap-3">
+  {% for lesson in lessons %}
+    <div class="card p-3">
+      <div class="d-flex align-items-center justify-content-between mb-2">
+        <h5 class="card-title mb-0">{{ lesson.title }}</h5>
+        {% if lesson.id in completed_lessons %}
+          <span class="tag">Completed</span>
         {% endif %}
-          <a href="{% url 'mark_lesson_complete' lesson.id %}" class="btn btn-sm btn-outline-primary mt-1">Mark Complete</a>
-        </div>
-      </li>
-    {% endfor %}
-  </ul>
+      </div>
+      {% if lesson.video %}
+        <video width="100%" controls class="mb-3">
+          <source src="{{ lesson.video.url }}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      {% endif %}
+      <div class="d-flex align-items-center gap-2 flex-wrap">
+        {% if lesson.material %}
+          <a href="{{ lesson.material.url }}" download class="btn btn-outline-primary btn-sm">Download Material</a>
+        {% endif %}
+        {% if lesson.id not in completed_lessons %}
+          <a href="{% url 'mark_lesson_complete' lesson.id %}" class="btn btn-primary btn-sm">Mark Complete</a>
+        {% endif %}
+      </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">No lessons uploaded for this course yet.</p>
+  {% endfor %}
 </div>
 {% endblock %}

@@ -28,15 +28,11 @@ class LessonForm(forms.ModelForm):
 
 
 class LiveClassForm(forms.ModelForm):
-    # scheduled_datetime = forms.DateTimeField(
-    #     input_formats=['%Y-%m-%dT%H:%M'],  # Accept HTML5 datetime-local format
-    #     widget=forms.DateTimeInput(attrs={'type': 'datetime-local'})
-    # )
     class Meta:
         model = LiveClass
         fields = ['course', 'title', 'description', 'scheduled_datetime', 'meeting_link']
         widgets = {
-            'scheduled_datetime': DateTimeInput(attrs={'type': 'datetime-local'})
+            'scheduled_datetime': DateTimeInput(attrs={'type': 'datetime-local'}, format='%Y-%m-%dT%H:%M')
         }
 
 

@@ -1,28 +1,30 @@
 {% extends 'main.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-3">{{ course.title }}</h2>
-  <p class="mb-4">{{ course.description }}</p>
+<h1 class="mb-2">{{ course.title }}</h1>
+<p class="text-muted mb-4">{{ course.description }}</p>
 
-  <h4 class="mb-3">Lessons</h4>
-  <div class="list-group">
-    {% for lesson in lessons %}
-      <div class="list-group-item">
-        <h5>{{ lesson.title }}</h5>
-        {% if lesson.video %}
-          <video width="100%" controls class="mb-2">
-            <source src="{{ lesson.video.url }}" type="video/mp4">
-          </video>
-        {% endif %}
+<h2 class="h5 mb-3">Lessons</h2>
+<div class="d-flex flex-column gap-3">
+  {% for lesson in lessons %}
+    <div class="card p-3">
+      <h5 class="card-title mb-2">{{ lesson.title }}</h5>
+      {% if lesson.video %}
+        <video width="100%" controls class="mb-3">
+          <source src="{{ lesson.video.url }}" type="video/mp4">
+        </video>
+      {% endif %}
+      <div class="d-flex align-items-center gap-2 flex-wrap">
         {% if lesson.material %}
-          <a href="{{ lesson.material.url }}" download class="btn btn-sm btn-outline-secondary mb-2">Download Material</a>
+          <a href="{{ lesson.material.url }}" download class="btn btn-outline-primary btn-sm">Download Material</a>
         {% endif %}
-        <form action="{% url 'update_progress' course.id lesson.id %}" method="post">
+        <form action="{% url 'update_progress' course.id lesson.id %}" method="post" class="m-0">
           {% csrf_token %}
-          <button type="submit" class="btn btn-sm btn-success">Mark as Completed</button>
+          <button type="submit" class="btn btn-primary btn-sm">Mark as Completed</button>
         </form>
       </div>
-    {% endfor %}
-  </div>
+    </div>
+  {% empty %}
+    <p class="text-muted">No lessons uploaded for this course yet.</p>
+  {% endfor %}
 </div>
 {% endblock %}

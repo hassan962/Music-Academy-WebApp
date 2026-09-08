@@ -1,11 +1,23 @@
 {% extends 'main.html' %}
+{% load widget_tweaks %}
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-4">Create Course</h2>
-  <form method="POST" class="card p-4 shadow-sm">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit" class="btn btn-success">Save Course</button>
-  </form>
+<div class="row justify-content-center">
+  <div class="col-lg-6">
+    <h1 class="mb-4">Create Course</h1>
+    <div class="card p-4">
+      <form method="POST">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label class="form-label">Title</label>
+          {{ form.title|add_class:"form-control" }}
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Description</label>
+          {{ form.description|add_class:"form-control" }}
+        </div>
+        <button type="submit" class="btn btn-primary w-100 mt-2">Save Course</button>
+      </form>
+    </div>
+  </div>
 </div>
 {% endblock %}

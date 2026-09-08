@@ -1,16 +1,22 @@
 {% extends 'main.html' %}
 {% block content %}
-<div class="container mt-4">
-  <h2 class="mb-4">Upcoming Live Classes</h2>
-  <div class="list-group">
-    {% for c in classes %}
-      <div class="list-group-item">
-        <h5>{{ c.title }} - {{ c.course.title }}</h5>
-        <p> {{ c.description }} </p>
-        <p><strong>Date:</strong> {{ c.scheduled_datetime }}</p>
-        <a href="{{ c.meeting_link }}" target="_blank" class="btn btn-outline-success">Join Class</a>
+<h1 class="mb-4">Upcoming Live Classes</h1>
+<div class="d-flex flex-column gap-3">
+  {% for c in classes %}
+    <div class="card p-3 d-flex flex-row align-items-center gap-3 flex-wrap">
+      <div class="date-chip">
+        <div class="dow">{{ c.scheduled_datetime|date:"D" }}</div>
+        <div class="dom">{{ c.scheduled_datetime|date:"j" }}</div>
       </div>
-    {% endfor %}
-  </div>
+      <div class="flex-grow-1">
+        <div class="fw-semibold">{{ c.title }} &middot; {{ c.course.title }}</div>
+        {% if c.description %}<div class="text-muted" style="font-size: .85rem;">{{ c.description }}</div>{% endif %}
+        <div class="text-muted" style="font-size: .85rem;">{{ c.scheduled_datetime|date:"g:i A" }}</div>
+      </div>
+      <a href="{{ c.meeting_link }}" target="_blank" class="btn btn-primary btn-sm">Join Class</a>
+    </div>
+  {% empty %}
+    <p class="text-muted">No upcoming live classes for your enrolled courses.</p>
+  {% endfor %}
 </div>
 {% endblock %}

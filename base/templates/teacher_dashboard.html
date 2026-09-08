@@ -1,18 +1,75 @@
 {% extends 'main.html' %}
 {% block content %}
-<div class="d-flex">
-  <div class="bg-dark text-white p-3" style="width: 220px;">
-    <h5>Teacher Menu</h5>
-    <ul class="nav flex-column">
-      <li class="nav-item"><a href="{% url 'create_course' %}" class="nav-link text-white">Create Course</a></li>
-      <li class="nav-item"><a href="{% url 'course_list' %}" class="nav-link text-white">Course List</a></li>
-      <li class="nav-item"><a href="{% url 'upcoming_classes' %}" class="nav-link text-white">Upcoming Classes</a></li>
-      <li class="nav-item"><a href="{% url 'upload_lesson' %}" class="nav-link text-white">Upload Lesson</a></li>
-      <li class="nav-item"><a href="{% url 'schedule_class' %}" class="nav-link text-white">Schedule Class</a></li>
-    </ul>
+<div class="d-flex gap-4 flex-wrap flex-md-nowrap">
+  <div class="app-sidebar">
+    <div class="sidebar-title">Music Academy</div>
+    <nav class="d-flex flex-column gap-1">
+      <a href="{% url 'dashboard' %}" class="nav-link active">Dashboard</a>
+      <a href="{% url 'create_course' %}" class="nav-link">Create Course</a>
+      <a href="{% url 'course_list' %}" class="nav-link">My Courses</a>
+      <a href="{% url 'upload_lesson' %}" class="nav-link">Upload Lesson</a>
+      <a href="{% url 'schedule_class' %}" class="nav-link">Schedule Class</a>
+      <a href="{% url 'upcoming_classes' %}" class="nav-link">Upcoming Classes</a>
+    </nav>
+    <div class="sidebar-user">
+      <div class="avatar-chip">{{ user.first_name|slice:":1" }}{{ user.last_name|slice:":1" }}</div>
+      <div>
+        <div class="fw-semibold" style="font-size: .85rem;">{{ user.first_name }} {{ user.last_name }}</div>
+        <div style="font-size: .75rem; opacity: .6;">Teacher</div>
+      </div>
+    </div>
   </div>
-  <div class="flex-grow-1 p-4">
-    <h3>Welcome, {{ user.first_name }}</h3>
+
+  <div class="flex-grow-1">
+    <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-4">
+      <div>
+        <h1 class="mb-1">Welcome back, {{ user.first_name }}</h1>
+        <p class="text-muted mb-0">Here's how your courses are doing.</p>
+      </div>
+      <a href="{% url 'create_course' %}" class="btn btn-primary">+ New Course</a>
+    </div>
+
+    <div class="row g-3 mb-4">
+      <div class="col-sm-4">
+        <div class="card p-3">
+          <div class="text-muted" style="font-size: .8rem;">Active courses</div>
+          <div class="brand-serif" style="font-size: 1.8rem;">{{ courses|length }}</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card p-3">
+          <div class="text-muted" style="font-size: .8rem;">Students enrolled</div>
+          <div class="brand-serif" style="font-size: 1.8rem;">{{ total_students }}</div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card p-3">
+          <div class="text-muted" style="font-size: .8rem;">Next live class</div>
+          {% if next_class %}
+            <div class="brand-serif" style="font-size: 1.4rem;">{{ next_class.scheduled_datetime|date:"D, g:i A" }}</div>
+          {% else %}
+            <div class="brand-serif" style="font-size: 1.4rem;">None scheduled</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+    <h2 class="h5 mb-3">Your courses</h2>
+    {% if courses %}
+      <div class="list-group mb-4">
+        {% for course in courses %}
+          <div class="list-group-item d-flex align-items-center gap-3 py-3">
+            <div class="flex-grow-1">
+              <div class="fw-semibold">{{ course.title }}</div>
+              <div class="text-muted" style="font-size: .85rem;">{{ course.lesson_count }} lesson{{ course.lesson_count|pluralize }} &middot; {{ course.student_count }} student{{ course.student_count|pluralize }}</div>
+            </div>
+            <a href="{% url 'course_detail' course.slug %}" class="fw-semibold">Manage</a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-muted">You haven't created a course yet. <a href="{% url 'create_course' %}">Create your first one</a>.</p>
+    {% endif %}
   </div>
 </div>
 {% endblock %}
