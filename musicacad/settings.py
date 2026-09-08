@@ -192,3 +192,28 @@ STORAGES = {
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django's own default LOGGING only sends request-error tracebacks to the
+# console when DEBUG=True; in production they'd otherwise only go to
+# mail_admins (unconfigured here), i.e. nowhere. Hosts like Render treat
+# stdout/stderr as the log stream, so send them there unconditionally.
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'WARNING',
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'ERROR',
+            'propagate': False,
+        },
+    },
+}
